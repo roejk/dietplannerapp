@@ -1,0 +1,70 @@
+<mat-toolbar>
+  <div class="col-1">
+    <input
+      type="image"
+      (click)="navigate('')"
+      class="logo"
+      src="assets/logo2.png"
+    />
+  </div>
+  <ng-container *ngIf="!isLoggedIn()">
+    <div class="full-width text-align-right">
+      <a
+        mat-raised-button
+        class="navbar-button"
+        color="primary"
+        (click)="navigate('login')"
+      >
+        Login
+      </a>
+      <a
+        mat-stroked-button
+        class="navbar-button"
+        color="primary"
+        (click)="navigate('register')"
+      >
+        Register
+      </a>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn() && isAdmin()">
+    <div class="full-width">
+      <a
+        mat-raised-button
+        class="navbar-button"
+        color="accent"
+        (click)="navigate('users')"
+      >
+        Users
+      </a>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn()">
+    <div class="full-width d-flex justify-content-end">
+      <a
+        mat-raised-button
+        class="navbar-button"
+        color="primary"
+        (click)="navigate('meal-plan')"
+      >
+        Plan
+      </a>
+      <a
+        mat-raised-button
+        class="navbar-button"
+        color="primary"
+        (click)="navigate('recipes')"
+      >
+        Recipes
+      </a>
+      <a
+        mat-stroked-button
+        class="navbar-button"
+        color="primary"
+        (click)="logout()"
+      >
+        Logout
+      </a>
+    </div>
+  </ng-container>
+</mat-toolbar>

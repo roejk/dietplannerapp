@@ -1,0 +1,22 @@
+.title-text-font {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 29px;
+  color: #ffffff;
+}
+
+.text-align-center {
+  text-align: center !important;
+}
+
+.mat-button-toggle-group {
+  width: 80%;
+  margin-right: 5px;
+}
+.mat-button-toggle {
+  width: 80%;
+}
+
+.mat-mdc-form-field {
+  width: 20%;
+}
