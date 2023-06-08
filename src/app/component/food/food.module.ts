@@ -19,11 +19,18 @@ import { RouterModule } from '@angular/router';
 import { MealPlanComponent } from './meal-plan/meal-plan.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
+import { AddEntryDialogComponent } from './meal-plan/add-dialog/add-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
 
 const votingRouting = [];
 
+export interface EntryDialogData {
+  mealId: number;
+  amount: number;
+}
+
 @NgModule({
-  declarations: [MealPlanComponent],
+  declarations: [MealPlanComponent, AddEntryDialogComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -47,6 +54,7 @@ const votingRouting = [];
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    MatSelectModule,
     RouterModule.forChild(votingRouting),
   ],
 })

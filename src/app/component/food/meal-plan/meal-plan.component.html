@@ -1,5 +1,34 @@
-<ng-container *ngIf="appState$ | async as appState">
-  <div class="container-xl mb-5">
+<div class="container-xl pb-5">
+  <div class="text-align-center pt-4 pb-3">
+    <mat-button-toggle-group
+      name="dayRow"
+      aria-label="Day picker"
+      class="mat-elevation-z8"
+    >
+      <ng-container *ngFor="let date of dates; let lastCall = last">
+        <mat-button-toggle
+          [value]="date"
+          [checked]="lastCall"
+          (change)="filterEntriesByDate($event.value)"
+          >{{ date | date : "dd. MMMM" }}</mat-button-toggle
+        >
+      </ng-container>
+    </mat-button-toggle-group>
+    <mat-form-field class="date-picker">
+      <mat-label>Choose a date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        (dateChange)="filterEntriesByDate($event.value)"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <ng-container *ngIf="appState$ | async as appState">
     <ng-container [ngSwitch]="appState.dataState">
       <ng-container *ngSwitchCase="DataState.LOADING_STATE">
         <div class="col-md-12 single-note-item text-center">
@@ -7,36 +36,6 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="DataState.LOADED_STATE">
-        <div class="text-align-center pt-4 pb-3">
-          <mat-button-toggle-group
-            name="fontStyle"
-            aria-label="Font Style"
-            class="mat-elevation-z8"
-          >
-            <ng-container *ngFor="let date of dates; let lastCall = last">
-              <mat-button-toggle
-                value="{{ date }}"
-                [checked]="lastCall ? 'true' : null"
-                (change)="filterEntriesByDate($event)"
-                >{{ date | date : "dd. MMMM" }}</mat-button-toggle
-              >
-            </ng-container>
-          </mat-button-toggle-group>
-          <mat-form-field>
-            <mat-label>Choose a date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              (dateChange)="filterEntriesByDate($event)"
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-
         <div *ngFor="let type of this.types; let i = index">
           <ng-container *ngIf="splittedData$[i] | async as split">
             <ng-container>
@@ -55,17 +54,63 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="date">
-                  <th mat-header-cell *matHeaderCellDef>Date</th>
+                <ng-container matColumnDef="calories">
+                  <th mat-header-cell *matHeaderCellDef>Calories (kcal)</th>
                   <td mat-cell *matCellDef="let element">
-                    {{ element.date }}
+                    {{ element.meal.calories }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="proteins">
+                  <th mat-header-cell *matHeaderCellDef>Proteins (g)</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.meal.proteins }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fats">
+                  <th mat-header-cell *matHeaderCellDef>Fats (g)</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.meal.fats }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="carbohydrates">
+                  <th mat-header-cell *matHeaderCellDef>Carbohydrates (g)</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.meal.carbohydrates }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="amount">
-                  <th mat-header-cell *matHeaderCellDef>Amount</th>
+                  <th mat-header-cell *matHeaderCellDef>Amount (g)</th>
                   <td mat-cell *matCellDef="let element">
-                    {{ element.amount + " g" }}
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="add">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <button
+                      class="text-align-right"
+                      mat-mini-fab
+                      color="accent"
+                      aria-label="Add entry button"
+                      (click)="addEntry(type)"
+                    >
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      class="text-align-right"
+                      mat-mini-fab
+                      color="warn"
+                      aria-label="Delete entry button"
+                      (click)="deleteEntry(element.mealEntryId)"
+                    >
+                      <mat-icon>clear</mat-icon>
+                    </button>
                   </td>
                 </ng-container>
 
@@ -85,5 +130,18 @@
         </ng-container>
       </ng-container>
     </ng-container>
+  </ng-container>
+</div>
+<div class="mb-5"></div>
+<footer>
+  <div class="footer-content">
+    <div class="px-5">TOTALS</div>
+    <div class="px-5">Calories: {{ totals["calories"] }} kcal</div>
+    <div class="px-5">Proteins: {{ totals["proteins"].toFixed(1) }} g</div>
+    <div class="px-5">Fats: {{ totals["fats"].toFixed(1) }} g</div>
+    <div class="px-5">
+      Carbohydrates: {{ totals["carbohydrates"].toFixed(1) }} g
+    </div>
+    <div class="px-5">Amount: {{ totals["amount"] }} g</div>
   </div>
-</ng-container>
+</footer>

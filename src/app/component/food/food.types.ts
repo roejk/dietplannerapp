@@ -16,9 +16,10 @@ export type Meal = {
 };
 
 export type Entry = {
-  mealEntryId: number;
+  mealEntryId?: number;
   username: string;
-  mealId: number;
+  meal?: Meal;
+  mealId?: number;
   date: string;
   amount: number;
   type: MealEntryType;

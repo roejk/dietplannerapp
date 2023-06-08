@@ -1,0 +1,15 @@
+<div mat-dialog-content>
+  <p>Add new entry</p>
+  <mat-form-field>
+    <mat-label>Meal ID (temp)</mat-label>
+    <input matInput [(ngModel)]="data.mealId" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Amount</mat-label>
+    <input matInput [(ngModel)]="data.amount" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="text-align-center">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Add</button>
+</div>

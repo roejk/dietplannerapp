@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError, tap, catchError } from 'rxjs';
 import { TokenDecoderService } from '../token-decoder/token-decoder.service';
@@ -19,11 +23,12 @@ export class MealPlanService {
       .pipe(tap(console.log), catchError(this.handleError))
   );
 
-  entriesByDate$ = (date: string) => <Observable<Entry[]>>(
-    this.http
-      .get<Entry[]>(`${this.apiUrl}/entries/${this.username}/${date}`)
-      .pipe(tap(console.log), catchError(this.handleError))
-  );
+  entriesByDate$ = (date: string) =>
+    <Observable<Entry[]>>(
+      this.http
+        .get<Entry[]>(`${this.apiUrl}/entries/${this.username}/${date}`)
+        .pipe(tap(console.log), catchError(this.handleError))
+    );
 
   entryAdd$ = (entry: Entry) =>
     <Observable<Entry>>(
@@ -47,6 +52,13 @@ export class MealPlanService {
       );
       subscriber.complete();
     });
+
+  deleteEntry$ = (entryId: number) =>
+    <Observable<number>>(
+      this.http
+        .delete<number>(`${this.apiUrl}/entry/delete/${entryId}`)
+        .pipe(tap(console.log), catchError(this.handleError))
+    );
 
   meals$ = <Observable<Meal>>(
     this.http
