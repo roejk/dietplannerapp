@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -10,7 +10,7 @@ import { NavbarComponent } from './component/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RecipesComponent } from './component/recipes/recipes.component';
+import { RecipesComponent } from './component/food/recipes/recipes.component';
 import { AuthenticationModule } from './component/authentication/authentication.module';
 
 import { FoodModule } from './component/food/food.module';
@@ -26,6 +26,8 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
+import { TokenInterceptorService } from './service/token-interceptor/token-interceptor.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 export const MY_FORMATS = {
   parse: {
@@ -40,13 +42,7 @@ export const MY_FORMATS = {
 };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UserComponent,
-    HomeComponent,
-    NavbarComponent,
-    RecipesComponent,
-  ],
+  declarations: [AppComponent, UserComponent, HomeComponent, NavbarComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -59,6 +55,7 @@ export const MY_FORMATS = {
     AuthenticationModule,
     FoodModule,
     MatMomentDateModule,
+    MatSlideToggleModule,
   ],
   providers: [
     {
@@ -67,6 +64,11 @@ export const MY_FORMATS = {
       deps: [MAT_DATE_LOCALE],
     },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

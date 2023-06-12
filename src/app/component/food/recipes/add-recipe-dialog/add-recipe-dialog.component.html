@@ -1,0 +1,25 @@
+<div mat-dialog-content>
+  <p>Add new recipe</p>
+  <div class="row">
+    <mat-form-field>
+      <mat-label>Meal ID (temp)</mat-label>
+      <input matInput [(ngModel)]="data.mealId" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Recipe name</mat-label>
+      <input matInput [(ngModel)]="data.name" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Ingredients</mat-label>
+      <input matInput [(ngModel)]="data.ingredients" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Instructions</mat-label>
+      <input matInput [(ngModel)]="data.instructions" required />
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions class="text-align-center">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Add</button>
+</div>

@@ -87,8 +87,8 @@ export class TokenInterceptorService implements HttpInterceptor {
   private logoutAndRedirect(
     err: HttpErrorResponse
   ): Observable<HttpEvent<unknown>> {
-    this.authService.logout();
-    this.router.navigateByUrl('/login');
+    // this.authService.logout();
+    // this.router.navigateByUrl('/login');
 
     return throwError(err);
   }

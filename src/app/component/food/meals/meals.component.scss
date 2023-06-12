@@ -1,0 +1,22 @@
+.title-text-font {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 29px;
+  color: #ffffff;
+}
+
+.text-align-center {
+  text-align: center !important;
+}
+
+.mat-column-add {
+  width: 5% !important;
+}
+
+.mat-column-meal {
+  width: 25% !important;
+}
+
+[class*="mat-column"] {
+  width: 14%;
+}

@@ -1,32 +1,32 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError, tap, catchError } from 'rxjs';
-import { TokenDecoderService } from '../token-decoder/token-decoder.service';
-import { Entry, Meal, MealEntryType } from 'src/app/component/food/food.types';
+import {
+  Entry,
+  Meal,
+  MealEntryType,
+  Recipe,
+} from 'src/app/component/food/food.types';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MealPlanService {
+export class FoodService {
   private readonly apiUrl = 'http://localhost:8080/api/v1/food';
-  private username = this.decoder.getUsernameFromToken();
 
-  constructor(private http: HttpClient, private decoder: TokenDecoderService) {}
+  constructor(private http: HttpClient) {}
 
-  entries$ = <Observable<Entry[]>>(
-    this.http
-      .get<Entry[]>(`${this.apiUrl}/entries/${this.username}`)
-      .pipe(tap(console.log), catchError(this.handleError))
-  );
-
-  entriesByDate$ = (date: string) =>
+  entries$ = (username: string) =>
     <Observable<Entry[]>>(
       this.http
-        .get<Entry[]>(`${this.apiUrl}/entries/${this.username}/${date}`)
+        .get<Entry[]>(`${this.apiUrl}/entries/${username}`)
+        .pipe(tap(console.log), catchError(this.handleError))
+    );
+
+  entriesByDate$ = (username: string, date: string) =>
+    <Observable<Entry[]>>(
+      this.http
+        .get<Entry[]>(`${this.apiUrl}/entries/${username}/${date}`)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
@@ -60,7 +60,7 @@ export class MealPlanService {
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
-  meals$ = <Observable<Meal>>(
+  meals$ = <Observable<Meal[]>>(
     this.http
       .get<Meal[]>(`${this.apiUrl}/meals`)
       .pipe(tap(console.log), catchError(this.handleError))
@@ -77,6 +77,19 @@ export class MealPlanService {
     <Observable<Meal>>(
       this.http
         .post<Meal>(`${this.apiUrl}/meal/add`, meal)
+        .pipe(tap(console.log), catchError(this.handleError))
+    );
+
+  recipes$ = <Observable<Recipe[]>>(
+    this.http
+      .get<Recipe[]>(`${this.apiUrl}/recipes`)
+      .pipe(tap(console.log), catchError(this.handleError))
+  );
+
+  recipeAdd$ = (recipe: Recipe) =>
+    <Observable<Recipe>>(
+      this.http
+        .post<Recipe>(`${this.apiUrl}/recipe/add`, recipe)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 

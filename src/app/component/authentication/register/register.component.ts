@@ -10,7 +10,7 @@ import { LocalStorageService } from 'src/app/service/local-storage/local-storage
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;

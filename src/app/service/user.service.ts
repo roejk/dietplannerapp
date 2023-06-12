@@ -8,7 +8,7 @@ import { UserRole } from '../enum/user-role.enum';
   providedIn: 'root',
 })
 export class UserService {
-  private readonly apiUrl = 'http://localhost:8080';
+  private readonly apiUrl = 'http://localhost:8080/api/v1/management';
 
   constructor(private http: HttpClient) {}
 

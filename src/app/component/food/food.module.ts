@@ -19,18 +19,25 @@ import { RouterModule } from '@angular/router';
 import { MealPlanComponent } from './meal-plan/meal-plan.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
-import { AddEntryDialogComponent } from './meal-plan/add-dialog/add-dialog.component';
+import { AddEntryDialogComponent } from './meal-plan/add-entry-dialog/add-entry-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
-
-const votingRouting = [];
-
-export interface EntryDialogData {
-  mealId: number;
-  amount: number;
-}
+import { MealsComponent } from './meals/meals.component';
+import { AddMealDialogComponent } from './meals/add-meal-dialog/add-meal-dialog.component';
+import { RecipesComponent } from './recipes/recipes.component';
+import { AddRecipeDialogComponent } from './recipes/add-recipe-dialog/add-recipe-dialog.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
-  declarations: [MealPlanComponent, AddEntryDialogComponent],
+  declarations: [
+    MealPlanComponent,
+    AddEntryDialogComponent,
+    MealsComponent,
+    AddMealDialogComponent,
+    RecipesComponent,
+    AddRecipeDialogComponent,
+  ],
   imports: [
     CommonModule,
     MatTableModule,
@@ -55,7 +62,9 @@ export interface EntryDialogData {
     MatInputModule,
     MatDatepickerModule,
     MatSelectModule,
-    RouterModule.forChild(votingRouting),
+    MatMenuModule,
+    MatPaginatorModule,
+    NgxMatSelectSearchModule,
   ],
 })
 export class FoodModule {}

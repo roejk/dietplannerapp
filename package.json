@@ -27,7 +27,9 @@
     "bootstrap-icons": "^1.10.5",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
+    "ngx-mat-select-search": "^7.0.2",
     "rxjs": "~7.8.0",
+    "schematics-scss-migrate": "^2.3.17",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },

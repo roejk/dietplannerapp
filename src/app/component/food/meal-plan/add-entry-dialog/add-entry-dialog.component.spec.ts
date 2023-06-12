@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddEntryDialogComponent } from './add-dialog.component';
+import { AddEntryDialogComponent } from './add-entry-dialog.component';
 
 describe('AddDialogComponent', () => {
   let component: AddEntryDialogComponent;

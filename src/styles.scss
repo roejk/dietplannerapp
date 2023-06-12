@@ -1,0 +1,100 @@
+@import "@angular/material/theming";
+
+@include mat-core();
+
+$primary: mat-palette($mat-indigo);
+$accent: mat-palette($mat-pink, A200, A100, A400);
+$warn: mat-palette($mat-red);
+$theme: mat-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+  )
+);
+
+@include all-component-themes($theme);
+
+.dark-theme {
+  color: $light-primary-text;
+  $dark-primary: mat-palette($mat-purple);
+  $dark-accent: mat-palette($mat-green, A400, A100, A700);
+  $dark-warn: mat-palette($mat-red);
+  $dark-theme: mat-dark-theme(
+    (
+      color: (
+        primary: $dark-primary,
+        accent: $dark-accent,
+        warn: $dark-warn,
+      ),
+    )
+  );
+
+  @include all-component-colors($dark-theme);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /* background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.7) 75%,
+      #000 100%
+    ),
+    url("src\assets\food.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-size: cover; */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-align-right {
+  text-align: right !important;
+}
+
+app-navbar {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 2;
+}
+
+::-webkit-scrollbar {
+  background-color: #202324;
+  color: #aba499;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #454a4d;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #575e62;
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: #484e51;
+}
+::-webkit-scrollbar-corner {
+  background-color: #181a1b;
+}
+* {
+  scrollbar-color: #454a4d #202324;
+}
+::selection {
+  background-color: #004daa !important;
+  color: #e8e6e3 !important;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  filter: brightness(95%);
+}

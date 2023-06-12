@@ -1,0 +1,168 @@
+<div class="container-xl py-5">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <ng-container matColumnDef="meal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Meal</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="calories">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Calories (kcal/100)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.calories }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="proteins">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Proteins (g/100)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.proteins }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fats">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fats (g/100)</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.fats }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="carbohydrates">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Carbohydrates (g/100)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.carbohydrates }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="add">
+      <th mat-header-cell *matHeaderCellDef>
+        <button
+          class="text-align-right"
+          mat-mini-fab
+          color="accent"
+          aria-label="Add meal button"
+          (click)="addMeal()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          class="text-align-right"
+          mat-mini-fab
+          color="primary"
+          aria-label="Add meal to plan button"
+          (click)="addEntry(element.mealId)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[10, 15, 20]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+  >
+  </mat-paginator>
+</div>
+
+<!-- <div class="container-xl py-5">
+  <ng-container *ngIf="appState$ | async as appState">
+    <ng-container [ngSwitch]="appState.dataState">
+      <ng-container *ngSwitchCase="DataState.LOADING_STATE">
+        <div class="col-md-12 single-note-item text-center">
+          <div class="spinner-border text-info" role="status"></div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="DataState.LOADED_STATE">
+        <ng-container>
+          <table
+            mat-table
+            [dataSource]="appState.appData"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="meal">
+              <th mat-header-cell *matHeaderCellDef>Meal</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="calories">
+              <th mat-header-cell *matHeaderCellDef>Calories (kcal/100)</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.calories }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="proteins">
+              <th mat-header-cell *matHeaderCellDef>Proteins (g/100)</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.proteins }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fats">
+              <th mat-header-cell *matHeaderCellDef>Fats (g/100)</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.fats }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="carbohydrates">
+              <th mat-header-cell *matHeaderCellDef>Carbohydrates (g/100)</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.carbohydrates }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="add">
+              <th mat-header-cell *matHeaderCellDef>
+                <button
+                  class="text-align-right"
+                  mat-mini-fab
+                  color="accent"
+                  aria-label="Add meal button"
+                  (click)="addMeal()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  class="text-align-right"
+                  mat-mini-fab
+                  color="primary"
+                  aria-label="Add meal to plan button"
+                  (click)="addEntry(element.mealId)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="DataState.ERROR_STATE">
+        <div class="alert-danger">
+          {{ appState.error }}
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div> -->

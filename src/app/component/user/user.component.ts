@@ -8,7 +8,7 @@ import { DataState } from 'src/app/enum/data-state.enum';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css'],
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit {
   appState$: Observable<AppState<CustomResponse>>;

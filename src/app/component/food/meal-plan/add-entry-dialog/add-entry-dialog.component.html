@@ -1,0 +1,56 @@
+<div mat-dialog-content>
+  <p>Add new entry</p>
+  <div class="row">
+    <mat-form-field>
+      <mat-label>Meal</mat-label>
+      <mat-select [(ngModel)]="data.entry.mealId" required #singleSelect>
+        <!-- <ng-container *ngIf="filteredMeals | async as meals"> -->
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="search"
+            noEntriesFoundLabel="no matching meal found"
+            [formControl]="filterCtrl"
+          ></ngx-mat-select-search
+        ></mat-option>
+        <mat-option
+          *ngFor="let meal of filteredMeals | async as meals"
+          [value]="meal.mealId"
+        >
+          {{ meal.name }}
+        </mat-option>
+        <!-- </ng-container> -->
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Amount (g)</mat-label>
+      <input matInput [(ngModel)]="data.entry.amount" required />
+    </mat-form-field>
+    <mat-form-field class="date-picker">
+      <mat-label>Choose a date</mat-label>
+      <input
+        matInput
+        [(ngModel)]="data.entry.date"
+        [matDatepicker]="picker"
+        required
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="data.entry.type" required>
+        <mat-option value="BREAKFAST">breakfast</mat-option>
+        <mat-option value="DINNER">dinner</mat-option>
+        <mat-option value="SNACK">snack</mat-option>
+        <mat-option value="SUPPER">supper</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions class="text-align-center">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Add</button>
+</div>

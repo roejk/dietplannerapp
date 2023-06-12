@@ -8,29 +8,34 @@ import {
   tap,
   BehaviorSubject,
   finalize,
+  groupBy,
 } from 'rxjs';
 import { DataState } from 'src/app/enum/data-state.enum';
 import { AppState } from 'src/app/interface/app-state';
-import { MealPlanService } from 'src/app/service/food/food.service';
-import { Entry, MealEntryType } from '../food.types';
+import { FoodService } from 'src/app/service/food/food.service';
+import { Entry, EntryDialogData, MealEntryType } from '../food.types';
 import { formatDate } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { AddEntryDialogComponent } from './add-dialog/add-dialog.component';
+import { AddEntryDialogComponent } from './add-entry-dialog/add-entry-dialog.component';
 import * as moment from 'moment';
 import { TokenDecoderService } from 'src/app/service/token-decoder/token-decoder.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-meal-plan',
   templateUrl: './meal-plan.component.html',
-  styleUrls: ['./meal-plan.component.css'],
+  styleUrls: ['./meal-plan.component.scss'],
 })
 export class MealPlanComponent implements OnInit {
   private username = this.decoder.getUsernameFromToken();
-  appState$: Observable<AppState<Entry[]>>;
-  splittedData$: Observable<AppState<Entry[]>>[] = [];
-  readonly DataState = DataState;
-  private dataSubject = new BehaviorSubject<Entry[]>(null);
+  // appState$: Observable<AppState<Entry[]>>;
+  // splittedData$: Observable<AppState<Entry[]>>[] = [];
+  // readonly DataState = DataState;
+  // private dataSubject = new BehaviorSubject<Entry[]>(null);
   readonly types = Object.values(MealEntryType);
+  private data: Entry[] = [];
+  splittedData = [];
+  groupedData = [];
   displayedColumns: string[] = [
     'meal',
     'calories',
@@ -45,7 +50,7 @@ export class MealPlanComponent implements OnInit {
   totals = { calories: 0, proteins: 0, fats: 0, carbohydrates: 0, amount: 0 };
 
   constructor(
-    private mealPlanService: MealPlanService,
+    private foodService: FoodService,
     public dialog: MatDialog,
     private decoder: TokenDecoderService
   ) {}
@@ -58,35 +63,50 @@ export class MealPlanComponent implements OnInit {
     }
     this.selectedDate = this.dates.at(-1);
 
-    this.appState$ = this.mealPlanService
-      .entriesByDate$(this.selectedDate)
-      .pipe(
-        map((response) => {
-          response.forEach((entry) => {
-            this.countTotals(entry);
-          });
-          this.dataSubject.next(response);
-          return {
-            dataState: DataState.LOADED_STATE,
-            appData: response,
-          };
-        }),
-        startWith({ dataState: DataState.LOADING_STATE }),
-        catchError((error: string) => {
-          return of({ dataState: DataState.ERROR_STATE, error: error });
-        }),
-        finalize(() => {
-          this.splitEntriesByType();
-        })
-      );
+    // this.appState$ = this.foodService
+    //   .entriesByDate$(this.username, this.selectedDate)
+    //   .pipe(
+    //     map((response) => {
+    //       response.forEach((entry) => {
+    //         this.countTotals(entry);
+    //       });
+    //       this.dataSubject.next(response);
+    //       return {
+    //         dataState: DataState.LOADED_STATE,
+    //         appData: response,
+    //       };
+    //     }),
+    //     startWith({ dataState: DataState.LOADING_STATE }),
+    //     catchError((error: string) => {
+    //       return of({ dataState: DataState.ERROR_STATE, error: error });
+    //     }),
+    //     finalize(() => {
+    //       this.splitEntriesByType();
+    //     })
+    //   );
+    this.loadData();
   }
 
-  countTotals(entry: Entry) {
-    this.totals.calories += entry.meal.calories;
-    this.totals.proteins += entry.meal.proteins;
-    this.totals.fats += entry.meal.fats;
-    this.totals.carbohydrates += entry.meal.carbohydrates;
-    this.totals.amount += entry.amount;
+  loadData() {
+    this.foodService
+      .entriesByDate$(this.username, this.selectedDate)
+      .subscribe((x) => {
+        this.data = x;
+        this.splitEntriesByType();
+        this.countTotals();
+        this.groupEntriesByType();
+      });
+  }
+
+  countTotals() {
+    this.data.forEach((entry) => {
+      this.totals.calories += (entry.meal.calories * entry.amount) / 100;
+      this.totals.proteins += (entry.meal.proteins * entry.amount) / 100;
+      this.totals.fats += (entry.meal.fats * entry.amount) / 100;
+      this.totals.carbohydrates +=
+        (entry.meal.carbohydrates * entry.amount) / 100;
+      this.totals.amount += entry.amount;
+    });
   }
 
   resetTotals() {
@@ -100,72 +120,96 @@ export class MealPlanComponent implements OnInit {
   filterEntriesByDate(date: string) {
     this.resetTotals();
     this.selectedDate = moment(date).format('yyyy-MM-DD').toString();
-    this.appState$ = this.mealPlanService
-      .entriesByDate$(this.selectedDate)
-      .pipe(
-        map((response) => {
-          response.forEach((entry) => {
-            this.countTotals(entry);
-          });
-          this.dataSubject.next(response);
-          return {
-            dataState: DataState.LOADED_STATE,
-            appData: response,
-          };
-        }),
-        startWith({ dataState: DataState.LOADING_STATE }),
-        catchError((error: string) => {
-          return of({ dataState: DataState.ERROR_STATE, error: error });
-        }),
-        finalize(() => {
-          this.splitEntriesByType();
-        })
-      );
+    // this.appState$ = this.foodService
+    //   .entriesByDate$(this.username, this.selectedDate)
+    //   .pipe(
+    //     map((response) => {
+    //       response.forEach((entry) => {
+    //         this.countTotals(entry);
+    //       });
+    //       this.dataSubject.next(response);
+    //       return {
+    //         dataState: DataState.LOADED_STATE,
+    //         appData: response,
+    //       };
+    //     }),
+    //     startWith({ dataState: DataState.LOADING_STATE }),
+    //     catchError((error: string) => {
+    //       return of({ dataState: DataState.ERROR_STATE, error: error });
+    //     }),
+    //     finalize(() => {
+    //       this.splitEntriesByType();
+    //     })
+    //   );
+    this.loadData();
   }
 
   splitEntriesByType() {
     for (let i = 0; i < this.types.length; i++) {
-      this.splittedData$[i] = this.mealPlanService
-        .filterByType$(this.types[i], this.dataSubject.value)
-        .pipe(
-          map((response) => {
-            return {
-              dataState: DataState.LOADED_STATE,
-              appData: response,
-            };
-          }),
-          startWith({
-            dataState: DataState.LOADED_STATE,
-            appData: this.dataSubject.value,
-          }),
-          catchError((error: string) => {
-            return of({ dataState: DataState.ERROR_STATE, error });
-          })
-        );
+      // this.splittedData$[i] = this.foodService
+      //   .filterByType$(this.types[i], this.dataSubject.value)
+      //   .pipe(
+      //     map((response) => {
+      //       return {
+      //         dataState: DataState.LOADED_STATE,
+      //         appData: response,
+      //       };
+      //     }),
+      //     startWith({
+      //       dataState: DataState.LOADED_STATE,
+      //       appData: this.dataSubject.value,
+      //     }),
+      //     catchError((error: string) => {
+      //       return of({ dataState: DataState.ERROR_STATE, error });
+      //     })
+      //   );
+      this.splittedData.push({ type: this.types[i], isGroupBy: true });
+      this.splittedData[i] = new MatTableDataSource<Entry>(
+        this.data.filter((value) => value.type === this.types[i])
+      );
     }
   }
 
+  groupEntriesByType() {
+    var x = [];
+    for (let i = 0, j = 1; i < this.types.length; i++, j += 2) {
+      x.push({ type: this.types[i], isGroupBy: true });
+      x[j] = this.data.filter((value) => value.type === this.types[i]);
+    }
+    this.groupedData = x.flat(1);
+  }
+
+  isGroup(index, item): boolean {
+    return item.isGroupBy;
+  }
+
   addEntry(type: any) {
-    console.log('add', type);
     const dialogRef = this.dialog.open(AddEntryDialogComponent, {
-      data: { mealId: null, amount: null },
+      data: {
+        meals$: this.foodService.meals$,
+        meal: {},
+        entry: { date: this.selectedDate, type: type },
+      },
+      width: '50%',
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      this.mealPlanService
-        .entryAdd$({
-          mealId: result.mealId,
-          date: this.selectedDate,
-          type: type,
-          amount: result.amount,
-          username: this.username,
-        })
-        .pipe(finalize(() => this.filterEntriesByDate(this.selectedDate)))
-        .subscribe((x) => console.log(x));
+    dialogRef.afterClosed().subscribe((result: EntryDialogData) => {
+      if (result) {
+        this.foodService
+          .entryAdd$({
+            mealId: result.entry.mealId,
+            date: moment(result.entry.date).format('yyyy-MM-DD').toString(),
+            type: result.entry.type,
+            amount: result.entry.amount,
+            username: this.username,
+          })
+          .pipe(finalize(() => this.filterEntriesByDate(this.selectedDate)))
+          .subscribe((x) => console.log(x));
+      }
     });
   }
 
   deleteEntry(id: number) {
-    this.mealPlanService
+    this.foodService
       .deleteEntry$(id)
       .pipe(finalize(() => this.filterEntriesByDate(this.selectedDate)))
       .subscribe((x) => console.log(x));

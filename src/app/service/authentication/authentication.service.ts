@@ -57,9 +57,11 @@ export class AuthenticationService {
   }
 
   logout(): void {
+    this.http
+      .post(`${this.apiUrl}/logout`, { responseType: 'text' as 'json' })
+      .subscribe();
     this.localStorageService.removeItem('token');
     this.localStorageService.removeItem('refreshToken');
-    this.router.navigate(['']);
     this.tokenSubscription?.unsubscribe();
   }
 
@@ -80,6 +82,10 @@ export class AuthenticationService {
       );
   }
 
+  isAdmin(): boolean {
+    return this.getAuthority() === 'ROLE_ADMIN';
+  }
+
   private setToken(key: string, token: string): void {
     this.localStorageService.setItem(key, token);
   }
@@ -97,6 +103,13 @@ export class AuthenticationService {
       console.log('Token expired');
       this.logout();
     }
+  }
+
+  private getAuthority() {
+    const token = this.localStorageService.getItem('token');
+    const tokenDecoded: DecodedToken = jwt_decode(token);
+
+    return tokenDecoded.authorities[0]['authority'];
   }
 
   private handleError(error: HttpErrorResponse) {

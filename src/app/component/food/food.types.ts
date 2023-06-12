@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export enum MealEntryType {
   BREAKFAST = 'BREAKFAST',
   DINNER = 'DINNER',
@@ -6,7 +8,7 @@ export enum MealEntryType {
 }
 
 export type Meal = {
-  mealId: number;
+  mealId?: number;
   name: string;
   calories: number;
   proteins: number;
@@ -24,3 +26,16 @@ export type Entry = {
   amount: number;
   type: MealEntryType;
 };
+
+export type Recipe = {
+  recipeId?: number;
+  name: string;
+  ingredients: string;
+  instructions: string;
+  mealId: number;
+};
+
+export interface EntryDialogData {
+  meals$: Observable<Meal[]>;
+  entry: Entry;
+}

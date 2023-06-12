@@ -1,2 +1,23 @@
-<button (click)="showHello()">test</button>
-home
+<header class="masthead">
+  <div
+    class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center"
+  >
+    <div class="d-flex justify-content-center">
+      <div class="text-center">
+        <ng-container *ngIf="!isLoggedIn()">
+          <h1 class="text-white mx-auto my-0 text-uppercase">Diet Planner</h1>
+          <h2 class="text-white mx-auto mt-2 mb-5">
+            Plan and track your diet.
+          </h2>
+          <a class="btn btn-primary" href="/register">Get Started</a>
+        </ng-container>
+        <ng-container *ngIf="isLoggedIn()">
+          <h1 class="text-white mx-auto my-0 text-uppercase">Welcome</h1>
+          <h2 class="text-white mx-auto mt-2 mb-5">
+            {{ username }}
+          </h2>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</header>
