@@ -1,17 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  Observable,
-  catchError,
-  map,
-  of,
-  startWith,
-  tap,
-  BehaviorSubject,
-  finalize,
-  groupBy,
-} from 'rxjs';
-import { DataState } from 'src/app/enum/data-state.enum';
-import { AppState } from 'src/app/interface/app-state';
+import { finalize } from 'rxjs';
 import { FoodService } from 'src/app/service/food/food.service';
 import { Entry, EntryDialogData, MealEntryType } from '../food.types';
 import { formatDate } from '@angular/common';
@@ -28,10 +16,6 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class MealPlanComponent implements OnInit {
   private username = this.decoder.getUsernameFromToken();
-  // appState$: Observable<AppState<Entry[]>>;
-  // splittedData$: Observable<AppState<Entry[]>>[] = [];
-  // readonly DataState = DataState;
-  // private dataSubject = new BehaviorSubject<Entry[]>(null);
   readonly types = Object.values(MealEntryType);
   private data: Entry[] = [];
   splittedData = [];
@@ -62,28 +46,6 @@ export class MealPlanComponent implements OnInit {
       this.dates.push(formatDate(date, 'yyyy-MM-dd', 'en'));
     }
     this.selectedDate = this.dates.at(-1);
-
-    // this.appState$ = this.foodService
-    //   .entriesByDate$(this.username, this.selectedDate)
-    //   .pipe(
-    //     map((response) => {
-    //       response.forEach((entry) => {
-    //         this.countTotals(entry);
-    //       });
-    //       this.dataSubject.next(response);
-    //       return {
-    //         dataState: DataState.LOADED_STATE,
-    //         appData: response,
-    //       };
-    //     }),
-    //     startWith({ dataState: DataState.LOADING_STATE }),
-    //     catchError((error: string) => {
-    //       return of({ dataState: DataState.ERROR_STATE, error: error });
-    //     }),
-    //     finalize(() => {
-    //       this.splitEntriesByType();
-    //     })
-    //   );
     this.loadData();
   }
 
@@ -120,49 +82,11 @@ export class MealPlanComponent implements OnInit {
   filterEntriesByDate(date: string) {
     this.resetTotals();
     this.selectedDate = moment(date).format('yyyy-MM-DD').toString();
-    // this.appState$ = this.foodService
-    //   .entriesByDate$(this.username, this.selectedDate)
-    //   .pipe(
-    //     map((response) => {
-    //       response.forEach((entry) => {
-    //         this.countTotals(entry);
-    //       });
-    //       this.dataSubject.next(response);
-    //       return {
-    //         dataState: DataState.LOADED_STATE,
-    //         appData: response,
-    //       };
-    //     }),
-    //     startWith({ dataState: DataState.LOADING_STATE }),
-    //     catchError((error: string) => {
-    //       return of({ dataState: DataState.ERROR_STATE, error: error });
-    //     }),
-    //     finalize(() => {
-    //       this.splitEntriesByType();
-    //     })
-    //   );
     this.loadData();
   }
 
   splitEntriesByType() {
     for (let i = 0; i < this.types.length; i++) {
-      // this.splittedData$[i] = this.foodService
-      //   .filterByType$(this.types[i], this.dataSubject.value)
-      //   .pipe(
-      //     map((response) => {
-      //       return {
-      //         dataState: DataState.LOADED_STATE,
-      //         appData: response,
-      //       };
-      //     }),
-      //     startWith({
-      //       dataState: DataState.LOADED_STATE,
-      //       appData: this.dataSubject.value,
-      //     }),
-      //     catchError((error: string) => {
-      //       return of({ dataState: DataState.ERROR_STATE, error });
-      //     })
-      //   );
       this.splittedData.push({ type: this.types[i], isGroupBy: true });
       this.splittedData[i] = new MatTableDataSource<Entry>(
         this.data.filter((value) => value.type === this.types[i])
@@ -179,7 +103,7 @@ export class MealPlanComponent implements OnInit {
     this.groupedData = x.flat(1);
   }
 
-  isGroup(index, item): boolean {
+  isGroup(item): boolean {
     return item.isGroupBy;
   }
 

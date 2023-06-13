@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { CustomResponse } from '../../interface/custom-response';
-import { UserService } from '../../service/user.service';
-import { AppState } from 'src/app/interface/app-state';
-import { DataState } from 'src/app/enum/data-state.enum';
+import { Observable } from 'rxjs';
+import { UserService } from '../../service/user/user.service';
+import { User } from 'src/app/service/user/user.types';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-user',
@@ -11,18 +10,18 @@ import { DataState } from 'src/app/enum/data-state.enum';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit {
-  appState$: Observable<AppState<CustomResponse>>;
+  dataSource: MatTableDataSource<User> = new MatTableDataSource();
+  displayedColumns: string[] = [
+    'userId',
+    'username',
+    'email',
+    'role',
+    'isLocked',
+    'isEnabled',
+  ];
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.appState$ = this.userService.users$.pipe(
-      map((response) => {
-        return { dataState: DataState.LOADED_STATE, appData: response };
-      }),
-      startWith({ dataState: DataState.LOADING_STATE }),
-      catchError((error: string) => {
-        return of({ dataState: DataState.ERROR_STATE, error: error });
-      })
-    );
+    this.userService.users$.subscribe((x) => (this.dataSource.data = x));
   }
 }

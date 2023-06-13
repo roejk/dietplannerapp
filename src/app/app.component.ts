@@ -1,20 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ThemeService } from './core/services/theme.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
-  // isDarkTheme: Observable<boolean>;
-
+export class AppComponent {
   title = 'DietPlannerApp';
-
-  // constructor(private themeService: ThemeService) {}
-
-  ngOnInit() {
-    // this.isDarkTheme = this.themeService.isDarkTheme;
-  }
 }

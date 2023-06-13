@@ -28,6 +28,7 @@ import {
 } from '@angular/material/core';
 import { TokenInterceptorService } from './service/token-interceptor/token-interceptor.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTableModule } from '@angular/material/table';
 
 export const MY_FORMATS = {
   parse: {
@@ -56,6 +57,7 @@ export const MY_FORMATS = {
     FoodModule,
     MatMomentDateModule,
     MatSlideToggleModule,
+    MatTableModule,
   ],
   providers: [
     {

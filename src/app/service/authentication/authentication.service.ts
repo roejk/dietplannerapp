@@ -6,17 +6,14 @@ import {
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  BehaviorSubject,
   Observable,
   Subscription,
   catchError,
   interval,
-  map,
   tap,
   throwError,
 } from 'rxjs';
 import { LocalStorageService } from '../local-storage/local-storage.service';
-// import { LoginResponse } from 'src/app/interface/login-response';
 import { DecodedToken } from '../token-decoder/token-decoder.service';
 import jwt_decode from 'jwt-decode';
 import {

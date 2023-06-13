@@ -1,25 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { EntryDialogData, Meal } from '../food.types';
-import { AppState } from 'src/app/interface/app-state';
-import {
-  BehaviorSubject,
-  Observable,
-  catchError,
-  finalize,
-  map,
-  of,
-  startWith,
-} from 'rxjs';
+import { finalize } from 'rxjs';
 import { FoodService } from 'src/app/service/food/food.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DataState } from 'src/app/enum/data-state.enum';
 import { AddMealDialogComponent } from './add-meal-dialog/add-meal-dialog.component';
 import { AddEntryDialogComponent } from '../meal-plan/add-entry-dialog/add-entry-dialog.component';
 import { TokenDecoderService } from 'src/app/service/token-decoder/token-decoder.service';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort, Sort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
@@ -29,9 +18,6 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class MealsComponent implements OnInit, AfterViewInit {
   private username = this.decoder.getUsernameFromToken();
-  // appState$: Observable<AppState<Meal[]>>;
-  // readonly DataState = DataState;
-  // private dataSubject = new BehaviorSubject<Meal[]>(null);
   dataSource: MatTableDataSource<Meal> = new MatTableDataSource();
   displayedColumns: string[] = [
     'meal',
@@ -61,21 +47,12 @@ export class MealsComponent implements OnInit, AfterViewInit {
   }
 
   loadData() {
-    // this.appState$ = this.foodService.meals$.pipe(
-    //   map((response) => {
-    //     this.dataSubject.next(response);
-    //     return {
-    //       dataState: DataState.LOADED_STATE,
-    //       appData: response,
-    //     };
-    //   }),
-    //   startWith({ dataState: DataState.LOADING_STATE }),
-    //   catchError((error: string) => {
-    //     return of({ dataState: DataState.ERROR_STATE, error: error });
-    //   })
-    // );
-
     this.foodService.meals$.subscribe((x) => (this.dataSource.data = x));
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   addMeal() {

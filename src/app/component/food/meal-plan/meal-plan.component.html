@@ -38,28 +38,24 @@
             {{ element.meal.name }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="calories">
           <th mat-header-cell *matHeaderCellDef>Calories (kcal)</th>
           <td mat-cell *matCellDef="let element">
             {{ ((element.meal.calories * element.amount) / 100).toFixed(0) }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="proteins">
           <th mat-header-cell *matHeaderCellDef>Proteins (g)</th>
           <td mat-cell *matCellDef="let element">
             {{ ((element.meal.proteins * element.amount) / 100).toFixed(1) }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="fats">
           <th mat-header-cell *matHeaderCellDef>Fats (g)</th>
           <td mat-cell *matCellDef="let element">
             {{ ((element.meal.fats * element.amount) / 100).toFixed(1) }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="carbohydrates">
           <th mat-header-cell *matHeaderCellDef>Carbohydrates (g)</th>
           <td mat-cell *matCellDef="let element">
@@ -68,14 +64,12 @@
             }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="amount">
           <th mat-header-cell *matHeaderCellDef>Amount (g)</th>
           <td mat-cell *matCellDef="let element">
             {{ element.amount }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="add">
           <th mat-header-cell *matHeaderCellDef>
             <button
@@ -100,25 +94,8 @@
             </button>
           </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-        <!-- <ng-container matColumnDef="groupHeader">
-          <td
-            colspan="999"
-            class="text-align-center title-text-font"
-            mat-cell
-            *matCellDef="let groupBy"
-          >
-            {{ groupBy.type }}
-          </td>
-        </ng-container>
-
-        <tr
-          mat-row
-          *matRowDef="let row; columns: ['groupHeader']; when: isGroup"
-        ></tr> -->
       </table>
     </ng-container>
   </div>
@@ -136,164 +113,3 @@
     <div class="px-5">Amount: {{ totals["amount"] }} g</div>
   </div>
 </footer>
-
-<!-- <div class="container-xl pb-5">
-  <div class="d-flex justify-content-center text-align-center pt-4 pb-3">
-    <mat-button-toggle-group
-      name="dayRow"
-      aria-label="Day picker"
-      class="mat-elevation-z8"
-    >
-      <ng-container *ngFor="let date of dates; let lastCall = last">
-        <mat-button-toggle
-          [value]="date"
-          [checked]="lastCall"
-          (change)="filterEntriesByDate($event.value)"
-          >{{ date | date : "dd. MMMM" }}</mat-button-toggle
-        >
-      </ng-container>
-    </mat-button-toggle-group>
-    <button mat-icon-button [matMenuTriggerFor]="appMenu">
-      <mat-icon>calendar_today</mat-icon>
-    </button>
-    <mat-menu #appMenu="matMenu">
-      <mat-calendar
-        style="width: 15rem"
-        #calendar
-        [(selected)]="selectedDate"
-        (selectedChange)="filterEntriesByDate(selectedDate)"
-      >
-      </mat-calendar>
-    </mat-menu>
-  </div>
-  <ng-container *ngIf="appState$ | async as appState">
-    <ng-container [ngSwitch]="appState.dataState">
-      <ng-container *ngSwitchCase="DataState.LOADING_STATE">
-        <div class="col-md-12 single-note-item text-center">
-          <div class="spinner-border text-info" role="status"></div>
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="DataState.LOADED_STATE">
-        <div *ngFor="let type of this.types; let i = index">
-          <ng-container *ngIf="splittedData$[i] | async as split">
-            <ng-container>
-              <div class="text-align-center pt-4 pb-3">
-                <span class="title-text-font">{{ type }}</span>
-              </div>
-              <table
-                mat-table
-                [dataSource]="split.appData"
-                class="mat-elevation-z8"
-              >
-                <ng-container matColumnDef="meal">
-                  <th mat-header-cell *matHeaderCellDef>Meal</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{ element.meal.name }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="calories">
-                  <th mat-header-cell *matHeaderCellDef>Calories (kcal)</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{
-                      ((element.meal.calories * element.amount) / 100).toFixed(
-                        0
-                      )
-                    }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="proteins">
-                  <th mat-header-cell *matHeaderCellDef>Proteins (g)</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{
-                      ((element.meal.proteins * element.amount) / 100).toFixed(
-                        1
-                      )
-                    }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="fats">
-                  <th mat-header-cell *matHeaderCellDef>Fats (g)</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{
-                      ((element.meal.fats * element.amount) / 100).toFixed(1)
-                    }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="carbohydrates">
-                  <th mat-header-cell *matHeaderCellDef>Carbohydrates (g)</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{
-                      (
-                        (element.meal.carbohydrates * element.amount) /
-                        100
-                      ).toFixed(1)
-                    }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="amount">
-                  <th mat-header-cell *matHeaderCellDef>Amount (g)</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{ element.amount }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="add">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <button
-                      class="text-align-right"
-                      mat-mini-fab
-                      color="accent"
-                      aria-label="Add entry button"
-                      (click)="addEntry(type)"
-                    >
-                      <mat-icon>add</mat-icon>
-                    </button>
-                  </th>
-                  <td mat-cell *matCellDef="let element">
-                    <button
-                      class="text-align-right"
-                      mat-mini-fab
-                      color="warn"
-                      aria-label="Delete entry button"
-                      (click)="deleteEntry(element.mealEntryId)"
-                    >
-                      <mat-icon>clear</mat-icon>
-                    </button>
-                  </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr
-                  mat-row
-                  *matRowDef="let row; columns: displayedColumns"
-                ></tr>
-              </table>
-            </ng-container>
-          </ng-container>
-        </div>
-        <ng-container *ngSwitchCase="DataState.ERROR_STATE">
-          <div class="alert-danger">
-            {{ appState.error }}
-          </div>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-  </ng-container>
-</div>
-<div class="mb-5"></div>
-<footer class="mat-toolbar mat-elevation-z8">
-  <div class="d-flex align-items-center">
-    <div class="px-5">Calories: {{ totals["calories"].toFixed(0) }} kcal</div>
-    <div class="px-5">Proteins: {{ totals["proteins"].toFixed(1) }} g</div>
-    <div class="px-5">Fats: {{ totals["fats"].toFixed(1) }} g</div>
-    <div class="px-5">
-      Carbohydrates: {{ totals["carbohydrates"].toFixed(1) }} g
-    </div>
-    <div class="px-5">Amount: {{ totals["amount"] }} g</div>
-  </div>
-</footer> -->

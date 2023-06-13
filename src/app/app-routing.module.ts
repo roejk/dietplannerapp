@@ -20,7 +20,7 @@ const routes: Routes = [
     component: MealsComponent,
   },
   {
-    path: 'meal-plan',
+    path: 'plan',
     component: MealPlanComponent,
   },
   {

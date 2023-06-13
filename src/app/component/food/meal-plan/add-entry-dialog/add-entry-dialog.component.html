@@ -4,7 +4,6 @@
     <mat-form-field>
       <mat-label>Meal</mat-label>
       <mat-select [(ngModel)]="data.entry.mealId" required #singleSelect>
-        <!-- <ng-container *ngIf="filteredMeals | async as meals"> -->
         <mat-option>
           <ngx-mat-select-search
             placeholderLabel="search"
@@ -18,7 +17,6 @@
         >
           {{ meal.name }}
         </mat-option>
-        <!-- </ng-container> -->
       </mat-select>
     </mat-form-field>
     <mat-form-field>
