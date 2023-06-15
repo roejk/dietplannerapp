@@ -16,6 +16,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
@@ -44,6 +45,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatDialogModule,
     MatTableModule,
     MatCheckboxModule,
+    MatSnackBarModule,
   ],
 })
 export class AuthenticationModule {}

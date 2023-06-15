@@ -1,81 +1,110 @@
-<div class="container-xl py-5">
-  <mat-form-field>
-    <mat-label>Filter</mat-label>
-    <input
-      matInput
-      (keyup)="applyFilter($event)"
-      placeholder="Search meals"
-      #input
-    />
-  </mat-form-field>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
-    <ng-container matColumnDef="meal">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Meal</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.name }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="calories">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Calories (kcal/100)
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.calories }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="proteins">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Proteins (g/100)
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.proteins }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="fats">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fats (g/100)</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.fats }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="carbohydrates">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Carbohydrates (g/100)
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.carbohydrates }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="add">
-      <th mat-header-cell *matHeaderCellDef>
-        <button
-          class="text-align-right"
-          mat-mini-fab
-          color="accent"
-          aria-label="Add meal button"
-          (click)="addMeal()"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </th>
-      <td mat-cell *matCellDef="let element">
-        <button
-          class="text-align-right"
-          mat-mini-fab
-          color="primary"
-          aria-label="Add meal to plan button"
-          (click)="addEntry(element.mealId)"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-  <mat-paginator
-    [pageSizeOptions]="[10, 15, 20]"
-    showFirstLastButtons
-    aria-label="Select page of periodic elements"
-  >
-  </mat-paginator>
-</div>
+<mat-drawer-container>
+  <mat-drawer mode="side" #drawer>
+    <div class="container py-5">
+      <ng-container *ngIf="recipes$ | async as recipes">
+        <div *ngFor="let recipe of recipes">
+          Name: {{ recipe.name }} Ingredients:
+          {{ recipe.ingredients }} Instructions: {{ recipe.instructions }}
+        </div>
+      </ng-container>
+      <div>
+        Missing a recipe? Add yours <button (click)="addRecipe()">click</button>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <mat-drawer-content
+    ><div class="container-xl py-5">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Search meals"
+          #input
+        />
+      </mat-form-field>
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z8"
+        matSort
+      >
+        <ng-container matColumnDef="meal">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Meal</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.name }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="calories">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Calories (kcal/100)
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.calories }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="proteins">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Proteins (g/100)
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.proteins }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fats">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Fats (g/100)
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.fats }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="carbohydrates">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Carbohydrates (g/100)
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.carbohydrates }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="add">
+          <th mat-header-cell *matHeaderCellDef>
+            <button
+              class="text-align-right"
+              mat-mini-fab
+              color="accent"
+              aria-label="Add meal button"
+              (click)="addMeal()"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              class="text-align-right"
+              mat-mini-fab
+              color="primary"
+              aria-label="Add meal to plan button"
+              (click)="addEntry(element.mealId)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          (click)="drawer.open(); getRecipesForMeal(row.mealId)"
+          *matRowDef="let row; columns: displayedColumns"
+        ></tr>
+      </table>
+      <mat-paginator
+        class="mat-elevation-z8"
+        [pageSizeOptions]="[20, 15, 10]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator></div
+  ></mat-drawer-content>
+</mat-drawer-container>

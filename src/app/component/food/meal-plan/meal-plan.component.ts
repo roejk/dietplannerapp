@@ -127,7 +127,7 @@ export class MealPlanComponent implements OnInit {
             username: this.username,
           })
           .pipe(finalize(() => this.filterEntriesByDate(this.selectedDate)))
-          .subscribe((x) => console.log(x));
+          .subscribe();
       }
     });
   }
@@ -136,6 +136,6 @@ export class MealPlanComponent implements OnInit {
     this.foodService
       .deleteEntry$(id)
       .pipe(finalize(() => this.filterEntriesByDate(this.selectedDate)))
-      .subscribe((x) => console.log(x));
+      .subscribe();
   }
 }

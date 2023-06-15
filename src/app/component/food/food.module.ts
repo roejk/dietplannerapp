@@ -27,6 +27,7 @@ import { AddRecipeDialogComponent } from './recipes/add-recipe-dialog/add-recipe
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MatMenuModule,
     MatPaginatorModule,
     NgxMatSelectSearchModule,
+    MatSidenavModule,
   ],
 })
 export class FoodModule {}

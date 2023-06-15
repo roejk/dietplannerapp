@@ -39,7 +39,7 @@ export class RecipesComponent implements OnInit {
           instructions: result.instructions,
         })
         .pipe(finalize(() => this.loadData()))
-        .subscribe((x) => console.log(x));
+        .subscribe();
     });
   }
 }

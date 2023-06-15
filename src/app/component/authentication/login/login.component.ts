@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { first } from 'rxjs';
 import { AuthenticationService } from 'src/app/service/authentication/authentication.service';
 import { LocalStorageService } from 'src/app/service/local-storage/local-storage.service';
+import { UserLoginModel } from '../authentication.types';
 
 @Component({
   selector: 'app-login',
@@ -11,16 +13,15 @@ import { LocalStorageService } from 'src/app/service/local-storage/local-storage
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  form!: FormGroup;
-  loading = false;
-  submitted = false;
-  hidePassword = true;
+  public form!: FormGroup;
+  public hidePassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthenticationService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -30,20 +31,19 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  get f() {
-    return this.form.controls;
-  }
-
   onSubmit() {
-    this.submitted = true;
-    if (this.form.invalid) {
-      console.log('invalid form');
+    if (!this.form.valid) {
+      this.errorSnackBar('Invalid form data');
       return;
     }
 
-    this.loading = true;
+    const data: UserLoginModel = {
+      username: this.form.controls['username'].value,
+      password: this.form.controls['password'].value,
+    };
+
     this.authService
-      .login(this.f.username.value, this.f.password.value)
+      .login(data)
       .pipe(first())
       .subscribe({
         next: (res) => {
@@ -53,11 +53,23 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           if (error.status === 403) {
-            console.log('wrong password', error); //todo: modal or something
+            this.errorSnackBar('Invalid login or password');
+          } else {
+            this.errorSnackBar(error.error.error);
           }
-          console.log('login error', error);
-          this.loading = false;
         },
       });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
+
+  private errorSnackBar(msg: string) {
+    this.snackBar.open(msg, 'Close', {
+      duration: 3 * 1000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
   }
 }

@@ -13,14 +13,12 @@ export class HomeComponent {
   username = this.decoder.getUsernameFromToken();
 
   constructor(
-    private authService: AuthenticationService,
     private localStorage: LocalStorageService,
     private router: Router,
     private decoder: TokenDecoderService
   ) {}
 
   goToUsersPage() {
-    console.log('users route');
     this.router.navigate(['users']);
   }
 
@@ -32,11 +30,4 @@ export class HomeComponent {
     return this.localStorage.isLoggedIn();
   }
 
-  showHello() {
-    this.authService.hello().subscribe({
-      next: () => {
-        console.log('ok');
-      },
-    });
-  }
 }

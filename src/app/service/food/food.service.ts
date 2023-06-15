@@ -19,14 +19,16 @@ export class FoodService {
   entries$ = (username: string) =>
     <Observable<Entry[]>>(
       this.http
-        .get<Entry[]>(`${this.apiUrl}/entries/${username}`)
+        .get<Entry[]>(`${this.apiUrl}/entries?username=${username}`)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
   entriesByDate$ = (username: string, date: string) =>
     <Observable<Entry[]>>(
       this.http
-        .get<Entry[]>(`${this.apiUrl}/entries/${username}/${date}`)
+        .get<Entry[]>(
+          `${this.apiUrl}/entries?username=${username}&date=${date}`
+        )
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
@@ -67,9 +69,9 @@ export class FoodService {
   );
 
   mealsByName$ = (name: string) =>
-    <Observable<Meal>>(
+    <Observable<Meal[]>>(
       this.http
-        .get<Meal[]>(`${this.apiUrl}/meals/${name}`)
+        .get<Meal[]>(`${this.apiUrl}/meals?name=${name}`)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
@@ -90,6 +92,13 @@ export class FoodService {
     <Observable<Recipe>>(
       this.http
         .post<Recipe>(`${this.apiUrl}/recipe/add`, recipe)
+        .pipe(tap(console.log), catchError(this.handleError))
+    );
+
+  recipesByMealId$ = (mealId: number) =>
+    <Observable<Recipe[]>>(
+      this.http
+        .get<Recipe[]>(`${this.apiUrl}/recipes?mealId=${mealId}`)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 

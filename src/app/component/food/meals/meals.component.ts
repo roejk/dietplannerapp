@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { EntryDialogData, Meal } from '../food.types';
-import { finalize } from 'rxjs';
+import { EntryDialogData, Meal, Recipe } from '../food.types';
+import { Observable, finalize } from 'rxjs';
 import { FoodService } from 'src/app/service/food/food.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddMealDialogComponent } from './add-meal-dialog/add-meal-dialog.component';
@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { AddRecipeDialogComponent } from '../recipes/add-recipe-dialog/add-recipe-dialog.component';
 
 @Component({
   selector: 'app-meals',
@@ -27,6 +28,8 @@ export class MealsComponent implements OnInit, AfterViewInit {
     'carbohydrates',
     'add',
   ];
+  recipes$: Observable<Recipe[]>;
+  chosenMealId: number;
 
   constructor(
     private foodService: FoodService,
@@ -72,7 +75,7 @@ export class MealsComponent implements OnInit, AfterViewInit {
             isPublic: true,
           })
           .pipe(finalize(() => this.loadData()))
-          .subscribe((x) => console.log(x));
+          .subscribe();
       }
     });
   }
@@ -98,8 +101,31 @@ export class MealsComponent implements OnInit, AfterViewInit {
             amount: result.entry.amount,
             username: this.username,
           })
-          .subscribe((x) => console.log(x));
+          .subscribe();
       }
+    });
+  }
+
+  getRecipesForMeal(mealId: number) {
+    this.chosenMealId = mealId;
+    this.recipes$ = this.foodService.recipesByMealId$(mealId);
+  }
+
+  addRecipe() {
+    const dialogRef = this.dialog.open(AddRecipeDialogComponent, {
+      data: { mealId: this.chosenMealId },
+      width: '50%',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.foodService
+        .recipeAdd$({
+          mealId: result.mealId,
+          name: result.name,
+          ingredients: result.ingredients,
+          instructions: result.instructions,
+        })
+        .pipe(finalize(() => this.loadData()))
+        .subscribe();
     });
   }
 }

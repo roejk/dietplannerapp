@@ -18,6 +18,7 @@ import { DecodedToken } from '../token-decoder/token-decoder.service';
 import jwt_decode from 'jwt-decode';
 import {
   LoginResponse,
+  UserLoginModel,
   UserRegisterModel,
 } from 'src/app/component/authentication/authentication.types';
 
@@ -30,26 +31,12 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    private localStorageService: LocalStorageService,
-    private router: Router
+    private localStorageService: LocalStorageService
   ) {}
 
-  hello() {
-    return this.http.get(`${this.apiUrl}/hello`, { responseType: 'text' }).pipe(
-      tap((res) => console.log('HTTP response:', res)),
-      tap(console.log),
-      catchError(this.handleError)
-    );
-  }
-
-  login(username: string, password: string): Observable<LoginResponse> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  login(user: UserLoginModel): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(
-        `${this.apiUrl}/login`,
-        { username, password },
-        { headers: headers }
-      )
+      .post<LoginResponse>(`${this.apiUrl}/login`, user)
       .pipe(tap(() => this.runCheckTokenExpired()));
   }
 
@@ -97,7 +84,6 @@ export class AuthenticationService {
     const refreshDecoded: DecodedToken = jwt_decode(refreshToken);
 
     if (this.localStorageService.checkIfTokenExpired(refreshDecoded)) {
-      console.log('Token expired');
       this.logout();
     }
   }

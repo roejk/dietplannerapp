@@ -10,7 +10,6 @@ import { NavbarComponent } from './component/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RecipesComponent } from './component/food/recipes/recipes.component';
 import { AuthenticationModule } from './component/authentication/authentication.module';
 
 import { FoodModule } from './component/food/food.module';

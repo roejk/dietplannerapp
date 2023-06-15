@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/service/authentication/authentica
 import { UserRegisterModel } from '../authentication.types';
 import { PasswordMatchValidator } from './password-validator';
 import { LocalStorageService } from 'src/app/service/local-storage/local-storage.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -13,16 +14,15 @@ import { LocalStorageService } from 'src/app/service/local-storage/local-storage
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  form!: FormGroup;
-  loading = false;
-  submitted = false;
-  hidePassword = true;
+  public form!: FormGroup;
+  public hidePassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthenticationService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -37,23 +37,18 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  get f() {
-    return this.form.controls;
-  }
-
   onSubmit() {
-    this.submitted = true;
     if (this.form.invalid) {
-      console.log('invalid form');
+      this.errorSnackBar('Invalid form data');
       return;
     }
+
     const data: UserRegisterModel = {
       username: this.form.controls['username'].value,
       email: this.form.controls['email'].value,
       password: this.form.controls['password'].value,
     };
 
-    this.loading = true;
     this.authService
       .register(data)
       .pipe(first())
@@ -64,9 +59,20 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['']);
         },
         error: (error) => {
-          console.log('register error', error);
-          this.loading = false;
+          this.errorSnackBar(error.error.error);
         },
       });
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  private errorSnackBar(msg: string) {
+    this.snackBar.open(msg, 'Close', {
+      duration: 3 * 1000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
   }
 }
