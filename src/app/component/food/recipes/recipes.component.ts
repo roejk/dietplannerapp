@@ -28,7 +28,7 @@ export class RecipesComponent implements OnInit {
   addRecipe() {
     const dialogRef = this.dialog.open(AddRecipeDialogComponent, {
       data: {},
-      width: '50%',
+      width: '600px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.foodService

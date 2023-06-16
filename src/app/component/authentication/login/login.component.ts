@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
           if (error.status === 403) {
             this.errorSnackBar('Invalid login or password');
           } else {
-            this.errorSnackBar(error.error.error);
+            this.errorSnackBar(error);
           }
         },
       });

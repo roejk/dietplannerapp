@@ -36,6 +36,21 @@ export type Recipe = {
 };
 
 export interface EntryDialogData {
-  meals$: Observable<Meal[]>;
+  meals$?: Observable<Meal[]>;
+  mealsPage$?: Observable<Page<Meal[]>>;
   entry: Entry;
+}
+
+export interface Page<T> {
+  content: T;
+  pageable: any;
+  first: boolean;
+  last: boolean;
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  sort: any;
+  numberOfElements: number;
+  empty: boolean;
 }

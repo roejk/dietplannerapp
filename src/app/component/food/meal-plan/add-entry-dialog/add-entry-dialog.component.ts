@@ -37,13 +37,23 @@ export class AddEntryDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.data.meals$.subscribe({
-      next: (meals) => {
-        this.meals = meals;
-        this.mealsCtrl.setValue(this.meals[3]);
-        this.filteredMeals.next(this.meals.slice());
-      },
-    });
+    if (this.data.meals$) {
+      this.data.meals$.subscribe({
+        next: (meals) => {
+          this.meals = meals;
+          this.mealsCtrl.setValue(this.meals[3]);
+          this.filteredMeals.next(this.meals.slice());
+        },
+      });
+    } else if (this.data.mealsPage$) {
+      this.data.mealsPage$.subscribe({
+        next: (meals) => {
+          this.meals = meals.content;
+          this.mealsCtrl.setValue(this.meals[3]);
+          this.filteredMeals.next(this.meals.slice());
+        },
+      });
+    }
 
     this.filterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
@@ -58,7 +68,7 @@ export class AddEntryDialogComponent implements OnInit, OnDestroy {
   }
 
   protected filterMeals() {
-    if (!this.data.meals$) {
+    if (!this.data.meals$ && !this.data.mealsPage$) {
       return;
     }
 

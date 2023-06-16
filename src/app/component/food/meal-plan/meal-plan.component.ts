@@ -110,11 +110,12 @@ export class MealPlanComponent implements OnInit {
   addEntry(type: any) {
     const dialogRef = this.dialog.open(AddEntryDialogComponent, {
       data: {
-        meals$: this.foodService.meals$,
+        // meals$: this.foodService.meals$,
+        mealsPage$: this.foodService.mealsPage$(0, 3000),
         meal: {},
         entry: { date: this.selectedDate, type: type },
       },
-      width: '50%',
+      width: '600px',
     });
     dialogRef.afterClosed().subscribe((result: EntryDialogData) => {
       if (result) {

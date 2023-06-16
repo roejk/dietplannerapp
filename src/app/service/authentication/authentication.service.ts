@@ -1,18 +1,6 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  Observable,
-  Subscription,
-  catchError,
-  interval,
-  tap,
-  throwError,
-} from 'rxjs';
+import { Observable, Subscription, interval, tap, throwError } from 'rxjs';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { DecodedToken } from '../token-decoder/token-decoder.service';
 import jwt_decode from 'jwt-decode';
@@ -21,12 +9,13 @@ import {
   UserLoginModel,
   UserRegisterModel,
 } from 'src/app/component/authentication/authentication.types';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  apiUrl = 'http://localhost:8080/api/v1/auth';
+  private readonly apiUrl = environment.apiUrl + '/api/v1/auth';
   tokenSubscription?: Subscription;
 
   constructor(

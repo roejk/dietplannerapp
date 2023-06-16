@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { EntryDialogData, Meal, Recipe } from '../food.types';
-import { Observable, finalize } from 'rxjs';
+import { Observable, finalize, of } from 'rxjs';
 import { FoodService } from 'src/app/service/food/food.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddMealDialogComponent } from './add-meal-dialog/add-meal-dialog.component';
@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { AddRecipeDialogComponent } from '../recipes/add-recipe-dialog/add-recipe-dialog.component';
+import { AuthenticationService } from 'src/app/service/authentication/authentication.service';
 
 @Component({
   selector: 'app-meals',
@@ -34,7 +35,8 @@ export class MealsComponent implements OnInit, AfterViewInit {
   constructor(
     private foodService: FoodService,
     public dialog: MatDialog,
-    private decoder: TokenDecoderService
+    private decoder: TokenDecoderService,
+    private authService: AuthenticationService
   ) {}
 
   @ViewChild(MatSort) sort: MatSort;
@@ -50,7 +52,10 @@ export class MealsComponent implements OnInit, AfterViewInit {
   }
 
   loadData() {
-    this.foodService.meals$.subscribe((x) => (this.dataSource.data = x));
+    // this.foodService.meals$.subscribe((x) => (this.dataSource.data = x));
+    this.foodService
+      .mealsPage$(0, 3000)
+      .subscribe((x) => (this.dataSource.data = x.content));
   }
 
   applyFilter(event: Event) {
@@ -58,10 +63,14 @@ export class MealsComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  isAdmin() {
+    return this.authService.isAdmin();
+  }
+
   addMeal() {
     const dialogRef = this.dialog.open(AddMealDialogComponent, {
       data: {},
-      width: '50%',
+      width: '600px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
@@ -83,13 +92,15 @@ export class MealsComponent implements OnInit, AfterViewInit {
   addEntry(mealId: number) {
     const dialogRef = this.dialog.open(AddEntryDialogComponent, {
       data: {
-        meals$: this.foodService.meals$,
+        // meals$: this.foodService.meals$,
+        // mealsPage$: this.foodService.mealsPage$(0, 3000),
+        meals$: of(this.dataSource.data),
         meal: {},
         entry: {
           mealId: mealId,
         },
       },
-      width: '50%',
+      width: '600px',
     });
     dialogRef.afterClosed().subscribe((result: EntryDialogData) => {
       if (result) {
@@ -114,18 +125,31 @@ export class MealsComponent implements OnInit, AfterViewInit {
   addRecipe() {
     const dialogRef = this.dialog.open(AddRecipeDialogComponent, {
       data: { mealId: this.chosenMealId },
-      width: '50%',
+      width: '600px',
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.foodService
-        .recipeAdd$({
-          mealId: result.mealId,
-          name: result.name,
-          ingredients: result.ingredients,
-          instructions: result.instructions,
-        })
-        .pipe(finalize(() => this.loadData()))
-        .subscribe();
+      if (result) {
+        this.foodService
+          .recipeAdd$({
+            mealId: result.mealId,
+            name: result.name,
+            ingredients: result.ingredients,
+            instructions: result.instructions,
+          })
+          .pipe(finalize(() => this.loadData()))
+          .subscribe();
+      }
     });
+  }
+
+  uploadMeals(fileInputEvent: any) {
+    const file = fileInputEvent.target.files[0];
+    if (!file) {
+      return;
+    }
+    let formData = new FormData();
+    formData.append('file', file, file.name);
+
+    this.foodService.mealUpload$(formData).subscribe();
   }
 }

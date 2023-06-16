@@ -28,6 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatPaginatorModule,
     NgxMatSelectSearchModule,
     MatSidenavModule,
+    MatExpansionModule,
   ],
 })
 export class FoodModule {}

@@ -2,28 +2,60 @@
   <mat-drawer mode="side" #drawer>
     <div class="container py-5">
       <ng-container *ngIf="recipes$ | async as recipes">
-        <div *ngFor="let recipe of recipes">
-          Name: {{ recipe.name }} Ingredients:
-          {{ recipe.ingredients }} Instructions: {{ recipe.instructions }}
-        </div>
+        <mat-accordion>
+          <div *ngFor="let recipe of recipes" class="mb-2">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title> {{ recipe.name }} </mat-panel-title>
+              </mat-expansion-panel-header>
+              <p>Ingredients:</p>
+              {{ recipe.ingredients }}
+              <p>Instructions:</p>
+              {{ recipe.instructions }}
+            </mat-expansion-panel>
+          </div>
+        </mat-accordion>
       </ng-container>
-      <div>
-        Missing a recipe? Add yours <button (click)="addRecipe()">click</button>
+      <div class="d-flex align-items-center justify-content-end">
+        Missing a recipe?
+        <button
+          mat-raised-button
+          color="basic"
+          (click)="addRecipe()"
+          class="ms-2"
+        >
+          Add yours
+        </button>
       </div>
     </div>
   </mat-drawer>
 
   <mat-drawer-content
     ><div class="container-xl py-5">
-      <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input
-          matInput
-          (keyup)="applyFilter($event)"
-          placeholder="Search meals"
-          #input
-        />
-      </mat-form-field>
+      <div class="d-flex justify-content-between align-items-center">
+        <mat-form-field>
+          <mat-label>Filter</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Search meals"
+            #input
+          />
+        </mat-form-field>
+        <ng-container *ngIf="isAdmin()">
+          <input
+            #fileInput
+            hidden="true"
+            onclick="this.value=null"
+            (change)="uploadMeals($event)"
+            type="file"
+            accept=".csv"
+          />
+          <button mat-flat-button color="accent" (click)="fileInput.click()">
+            Choose Spreadsheet File (CSV)
+          </button>
+        </ng-container>
+      </div>
       <table
         mat-table
         [dataSource]="dataSource"
