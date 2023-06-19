@@ -124,17 +124,20 @@ export class MealsComponent implements OnInit, AfterViewInit {
 
   addRecipe() {
     const dialogRef = this.dialog.open(AddRecipeDialogComponent, {
-      data: { mealId: this.chosenMealId },
+      data: {
+        meals$: of(this.dataSource.data),
+        recipe: { mealId: this.chosenMealId },
+      },
       width: '600px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.foodService
           .recipeAdd$({
-            mealId: result.mealId,
-            name: result.name,
-            ingredients: result.ingredients,
-            instructions: result.instructions,
+            mealId: result.recipe.mealId,
+            name: result.recipe.name,
+            ingredients: result.recipe.ingredients,
+            instructions: result.recipe.instructions,
           })
           .pipe(finalize(() => this.loadData()))
           .subscribe();

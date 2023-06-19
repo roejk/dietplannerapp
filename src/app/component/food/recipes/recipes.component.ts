@@ -27,16 +27,16 @@ export class RecipesComponent implements OnInit {
 
   addRecipe() {
     const dialogRef = this.dialog.open(AddRecipeDialogComponent, {
-      data: {},
+      data: { meals$: this.foodService.meals$, recipe: {} },
       width: '600px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.foodService
         .recipeAdd$({
-          mealId: result.mealId,
-          name: result.name,
-          ingredients: result.ingredients,
-          instructions: result.instructions,
+          mealId: result.recipe.mealId,
+          name: result.recipe.name,
+          ingredients: result.recipe.ingredients,
+          instructions: result.recipe.instructions,
         })
         .pipe(finalize(() => this.loadData()))
         .subscribe();

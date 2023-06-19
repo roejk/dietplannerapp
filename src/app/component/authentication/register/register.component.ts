@@ -59,7 +59,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['']);
         },
         error: (error) => {
-          this.errorSnackBar(error);
+          this.errorSnackBar(error.error);
         },
       });
   }

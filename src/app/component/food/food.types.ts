@@ -41,6 +41,12 @@ export interface EntryDialogData {
   entry: Entry;
 }
 
+export interface RecipeDialogData {
+  meals$?: Observable<Meal[]>;
+  mealsPage$?: Observable<Page<Meal[]>>;
+  recipe: Recipe;
+}
+
 export interface Page<T> {
   content: T;
   pageable: any;

@@ -74,6 +74,19 @@ export class FoodService {
       .pipe(catchError(this.handleError))
   );
 
+  mealAdd$ = (meal: Meal) =>
+    <Observable<Meal>>(
+      this.http
+        .post<Meal>(`${this.apiUrl}/meal/add`, meal)
+        .pipe(catchError(this.handleError))
+    );
+
+  mealUpload$ = (file: any) => <Observable<number>>this.http
+      .post<number>(`${this.apiUrl}/meal/add/csv`, file, {
+        headers: new HttpHeaders().append('enctype', 'multipart/form-data'),
+      })
+      .pipe(catchError(this.handleError));
+
   mealsByName$ = (name: string) =>
     <Observable<Meal[]>>(
       this.http
@@ -87,19 +100,6 @@ export class FoodService {
         .get<Meal[]>(`${this.apiUrl}/meals?page=${page}&size=${size}`)
         .pipe(catchError(this.handleError))
     );
-
-  mealAdd$ = (meal: Meal) =>
-    <Observable<Meal>>(
-      this.http
-        .post<Meal>(`${this.apiUrl}/meal/add`, meal)
-        .pipe(catchError(this.handleError))
-    );
-
-  mealUpload$ = (file: any) => <Observable<number>>this.http
-      .post<number>(`${this.apiUrl}/meal/add/csv`, file, {
-        headers: new HttpHeaders().append('enctype', 'multipart/form-data'),
-      })
-      .pipe(catchError(this.handleError));
 
   recipes$ = <Observable<Recipe[]>>(
     this.http

@@ -2,20 +2,27 @@
   <p>Add new recipe</p>
   <div class="row">
     <mat-form-field>
-      <mat-label>Meal ID (temp)</mat-label>
-      <input matInput [(ngModel)]="data.mealId" required />
+      <mat-label>Meal</mat-label>
+      <mat-select [(ngModel)]="data.recipe.mealId" required #singleSelect>
+        <mat-option
+          *ngFor="let meal of data.meals$ | async as meals"
+          [value]="meal.mealId"
+        >
+          {{ meal.name }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Recipe name</mat-label>
-      <input matInput [(ngModel)]="data.name" required />
+      <input matInput [(ngModel)]="data.recipe.name" required />
     </mat-form-field>
     <mat-form-field>
       <mat-label>Ingredients</mat-label>
-      <input matInput [(ngModel)]="data.ingredients" required />
+      <input matInput [(ngModel)]="data.recipe.ingredients" required />
     </mat-form-field>
     <mat-form-field>
       <mat-label>Instructions</mat-label>
-      <input matInput [(ngModel)]="data.instructions" required />
+      <input matInput [(ngModel)]="data.recipe.instructions" required />
     </mat-form-field>
   </div>
 </div>

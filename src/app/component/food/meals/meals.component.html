@@ -8,10 +8,10 @@
               <mat-expansion-panel-header>
                 <mat-panel-title> {{ recipe.name }} </mat-panel-title>
               </mat-expansion-panel-header>
-              <p>Ingredients:</p>
+              <p><strong>Ingredients:</strong></p>
               {{ recipe.ingredients }}
-              <p>Instructions:</p>
-              {{ recipe.instructions }}
+              <p><strong>Instructions:</strong></p>
+              <p class="text-justify">{{ recipe.instructions }}</p>
             </mat-expansion-panel>
           </div>
         </mat-accordion>
