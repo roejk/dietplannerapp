@@ -139,7 +139,14 @@ export class MealsComponent implements OnInit, AfterViewInit {
             ingredients: result.recipe.ingredients,
             instructions: result.recipe.instructions,
           })
-          .pipe(finalize(() => this.loadData()))
+          .pipe(
+            finalize(() => {
+              this.loadData();
+              this.recipes$ = this.foodService.recipesByMealId$(
+                result.recipe.mealId
+              );
+            })
+          )
           .subscribe();
       }
     });
