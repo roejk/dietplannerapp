@@ -1,6 +1,30 @@
-# Dietplannerapp
+# DietPlannerApp
+
+This is a web application created for my thesis and for learning Angular, TypeScript and other modern web technologies. The main functionality of the application is to allow the user to create and manage their diet plan.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.7.
+
+## Backend application
+
+The project containing the application backend is in a [different repository](https://github.com/roejk/dietplanner-backend).
+
+## Features
+
+* User registration and login
+* Displaying a list of meals
+* Adding new meals
+* Displaying a plan with meal entries with summary of calorie and nutrients for any chosen day 
+* Adding new entries
+* Displaying a list of recipes
+* Adding new recipes
+
+## Screenshots
+
+![preview1.png](./screenshots/plan.png)
+
+![preview2.png](./screenshots/entry.png)
+
+![preview3.png](./screenshots/meals.png)
 
 ## Development server
 
